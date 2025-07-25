@@ -44,11 +44,6 @@ registerForm.addEventListener('submit', async (e) => {
   const email = document.getElementById('register-email').value.trim();
   const password = document.getElementById('register-password').value;
   const password2 = document.getElementById('register-password2').value;
-  // Validar dominio
-  if (!email.endsWith('@meduca.edu.pa')) {
-    registerError.textContent = 'Solo se permite el registro con correos educativos (@meduca.edu.pa).';
-    return;
-  }
   // Validar contraseñas
   if (password.length < 6) {
     registerError.textContent = 'La contraseña debe tener al menos 6 caracteres.';

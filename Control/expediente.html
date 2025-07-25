@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expediente Estudiante</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .expediente-container {
+      max-width: 800px;
+      margin: 4rem auto 0 auto;
+      background: var(--white);
+      border-radius: 1.2em;
+      box-shadow: 0 4px 24px var(--shadow);
+      padding: 2.5rem 2rem 2rem 2rem;
+      animation: mainFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.3s both;
+    }
+    .expediente-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    .estudiantes-lista {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .estudiante-item {
+      background: var(--background);
+      border: 2px solid var(--primary-light);
+      border-radius: 0.8em;
+      padding: 1.2rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .estudiante-item:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+    .estudiante-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .estudiante-nombre {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+    .estudiante-grado {
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    .estudiante-count {
+      background: var(--accent);
+      color: var(--text);
+      padding: 0.3rem 0.8rem;
+      border-radius: 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .detalles-container {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: var(--background);
+      border-radius: 0.8em;
+      border: 2px solid var(--primary-light);
+    }
+    .detalles-container.active {
+      display: block;
+    }
+    .detalles-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .amonestacion-item {
+      background: var(--white);
+      border-radius: 0.6em;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+    .amonestacion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .amonestacion-fecha {
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .amonestacion-infraccion {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .amonestacion-comentarios {
+      color: var(--text);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    .amonestacion-profesor {
+      font-size: 0.8rem;
+      color: var(--text);
+      opacity: 0.8;
+    }
+    .loading {
+      text-align: center;
+      color: var(--text);
+      font-style: italic;
+    }
+    .no-data {
+      text-align: center;
+      color: var(--text);
+      font-style: italic;
+      padding: 2rem;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-title">
+      <span class="icon">📋</span>
+      <span class="main-title">Registro <span class="highlight">Amonestaciones</span></span>
+    </div>
+    <div class="navbar-actions">
+      <a href="index.html" class="nav-btn nav-btn-outline">Volver</a>
+    </div>
+  </nav>
+  <div class="expediente-container">
+    <div class="expediente-title">Expediente de Estudiantes</div>
+    <div class="estudiantes-lista" id="estudiantesLista">
+      <div class="loading">Cargando estudiantes...</div>
+    </div>
+  </div>
+  <script>
+    const estudiantesLista = document.getElementById('estudiantesLista');
+    let estudiantesData = [];
+    let amonestacionesData = [];
+
+    // Cargar datos de amonestaciones
+    async function cargarDatos() {
+      try {
+        const snapshot = await db.collection('amonestacion').get();
+        amonestacionesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Crear lista de estudiantes únicos
+        const estudiantesUnicos = new Map();
+        
+        amonestacionesData.forEach(amonestacion => {
+          const key = `${amonestacion.nombre}-${amonestacion.grado}`;
+          if (!estudiantesUnicos.has(key)) {
+            estudiantesUnicos.set(key, {
+              nombre: amonestacion.nombre,
+              grado: amonestacion.grado,
+              amonestaciones: []
+            });
+          }
+          estudiantesUnicos.get(key).amonestaciones.push(amonestacion);
+        });
+        
+        estudiantesData = Array.from(estudiantesUnicos.values());
+        mostrarEstudiantes();
+      } catch (error) {
+        estudiantesLista.innerHTML = '<div class="no-data">Error al cargar datos</div>';
+      }
+    }
+
+    // Mostrar lista de estudiantes
+    function mostrarEstudiantes() {
+      if (estudiantesData.length === 0) {
+        estudiantesLista.innerHTML = '<div class="no-data">No hay estudiantes registrados</div>';
+        return;
+      }
+
+      estudiantesLista.innerHTML = '';
+      estudiantesData.forEach((estudiante, index) => {
+        const estudianteDiv = document.createElement('div');
+        estudianteDiv.className = 'estudiante-item';
+        estudianteDiv.innerHTML = `
+          <div class="estudiante-info">
+            <div class="estudiante-nombre">${estudiante.nombre}</div>
+            <div class="estudiante-grado">Grado: ${estudiante.grado}</div>
+          </div>
+          <div class="estudiante-count">${estudiante.amonestaciones.length} amonestación(es)</div>
+        `;
+        
+        // Agregar evento click
+        estudianteDiv.addEventListener('click', () => mostrarDetalles(index));
+        estudiantesLista.appendChild(estudianteDiv);
+      });
+    }
+
+    // Mostrar detalles de un estudiante
+    function mostrarDetalles(estudianteIndex) {
+      const estudiante = estudiantesData[estudianteIndex];
+      
+      // Remover detalles anteriores
+      const detallesAnteriores = document.querySelector('.detalles-container');
+      if (detallesAnteriores) {
+        detallesAnteriores.remove();
+      }
+      
+      // Crear contenedor de detalles
+      const detallesContainer = document.createElement('div');
+      detallesContainer.className = 'detalles-container active';
+      detallesContainer.innerHTML = `
+        <div class="detalles-title">Amonestaciones de ${estudiante.nombre} (${estudiante.grado})</div>
+      `;
+      
+      // Agregar cada amonestación
+      estudiante.amonestaciones.forEach(amonestacion => {
+        const amonestacionDiv = document.createElement('div');
+        amonestacionDiv.className = 'amonestacion-item';
+        amonestacionDiv.innerHTML = `
+          <div class="amonestacion-header">
+            <div class="amonestacion-fecha">${amonestacion.fecha}</div>
+          </div>
+          <div class="amonestacion-infraccion">${amonestacion.infraccion}</div>
+          ${amonestacion.comentarios ? `<div class="amonestacion-comentarios">${amonestacion.comentarios}</div>` : ''}
+          <div class="amonestacion-profesor">Profesor: ${amonestacion.profesor}</div>
+        `;
+        detallesContainer.appendChild(amonestacionDiv);
+      });
+      
+      // Insertar después del estudiante clickeado
+      const estudianteItem = estudiantesLista.children[estudianteIndex];
+      estudianteItem.parentNode.insertBefore(detallesContainer, estudianteItem.nextSibling);
+    }
+
+    // Cargar datos al cargar la página
+    cargarDatos();
+  </script>
+</body>
+</html> 

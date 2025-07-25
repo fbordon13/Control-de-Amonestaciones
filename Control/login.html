@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 4rem auto 0 auto;
+      background: var(--white);
+      border-radius: 1.2em;
+      box-shadow: 0 4px 24px var(--shadow);
+      padding: 2.5rem 2rem 2rem 2rem;
+      position: relative;
+      animation: mainFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.3s both;
+    }
+    .login-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    .login-form label {
+      font-weight: 600;
+      margin-bottom: 0.2em;
+      display: block;
+      color: var(--text);
+    }
+    .login-form input {
+      width: 100%;
+      padding: 0.7em 1em;
+      margin-bottom: 1.2em;
+      border: 1.5px solid var(--primary-light);
+      border-radius: 0.5em;
+      font-size: 1rem;
+      background: var(--background);
+      transition: border 0.2s;
+    }
+    .login-form input:focus {
+      border: 1.5px solid var(--primary);
+      outline: none;
+    }
+    .login-form .nav-btn {
+      width: 100%;
+      margin-top: 0.5em;
+    }
+    .user-icon {
+      position: absolute;
+      top: -2.2rem;
+      right: 1.5rem;
+      background: var(--primary);
+      color: var(--white);
+      border-radius: 50%;
+      width: 3.2rem;
+      height: 3.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 2px 8px var(--shadow);
+      cursor: pointer;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .user-icon:hover {
+      background: var(--accent);
+      color: var(--text);
+    }
+    .user-popup {
+      display: none;
+      position: absolute;
+      top: 2.5rem;
+      right: 0.5rem;
+      background: var(--white);
+      border-radius: 0.7em;
+      box-shadow: 0 4px 24px var(--shadow);
+      padding: 1.2em 1.5em;
+      min-width: 220px;
+      color: var(--text);
+      font-size: 1rem;
+      animation: mainFadeIn 0.5s;
+    }
+    .user-popup.active {
+      display: block;
+    }
+    .user-popup strong {
+      color: var(--primary);
+    }
+    .user-popup .close-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 1.2em;
+      float: right;
+      cursor: pointer;
+      margin-left: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-title">
+      <span class="icon">📋</span>
+      <span class="main-title">Registro <span class="highlight">Amonestaciones</span></span>
+    </div>
+    <div class="navbar-actions">
+      <a href="login.html" class="nav-btn">Login</a>
+      <a href="register.html" class="nav-btn nav-btn-outline">Register</a>
+    </div>
+  </nav>
+  <div class="login-container">
+    <div class="user-icon" id="userIcon" title="Ver datos de inicio de sesión">👤</div>
+    <div class="user-popup" id="userPopup">
+      <button class="close-btn" id="closePopup">×</button>
+      <div><strong>Nombre:</strong> <span id="popupName">-</span></div>
+      <div><strong>Correo:</strong> <span id="popupEmail">-</span></div>
+      <div><strong>Contraseña:</strong> <span id="popupPassword">-</span></div>
+    </div>
+    <div class="login-title">Iniciar Sesión</div>
+    <form class="login-form" id="loginForm">
+      <label for="login-name">Nombre</label>
+      <input type="text" id="login-name" name="name" placeholder="Tu nombre" required>
+      <label for="login-email">Correo</label>
+      <input type="email" id="login-email" name="email" placeholder="Correo electrónico" required>
+      <label for="login-password">Contraseña</label>
+      <input type="password" id="login-password" name="password" placeholder="Contraseña" required>
+      <button type="submit" class="nav-btn">Entrar</button>
+    </form>
+  </div>
+  <script>
+    // Mostrar datos en el popup
+    const loginForm = document.getElementById('loginForm');
+    const userIcon = document.getElementById('userIcon');
+    const userPopup = document.getElementById('userPopup');
+    const closePopup = document.getElementById('closePopup');
+    const popupName = document.getElementById('popupName');
+    const popupEmail = document.getElementById('popupEmail');
+    const popupPassword = document.getElementById('popupPassword');
+
+    userIcon.addEventListener('click', () => {
+      // Tomar los valores actuales del formulario
+      popupName.textContent = document.getElementById('login-name').value || '-';
+      popupEmail.textContent = document.getElementById('login-email').value || '-';
+      popupPassword.textContent = document.getElementById('login-password').value || '-';
+      userPopup.classList.toggle('active');
+    });
+    closePopup.addEventListener('click', () => {
+      userPopup.classList.remove('active');
+    });
+    // Cerrar popup al hacer click fuera
+    document.addEventListener('click', (e) => {
+      if (!userPopup.contains(e.target) && !userIcon.contains(e.target)) {
+        userPopup.classList.remove('active');
+      }
+    });
+    // Redirigir a la página principal al enviar
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html> 

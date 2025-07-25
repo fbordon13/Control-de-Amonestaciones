@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Amonestación</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .crud-container {
+      max-width: 480px;
+      margin: 4rem auto 0 auto;
+      background: var(--white);
+      border-radius: 1.2em;
+      box-shadow: 0 4px 24px var(--shadow);
+      padding: 2.5rem 2rem 2rem 2rem;
+      animation: mainFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.3s both;
+    }
+    .crud-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    .crud-form label {
+      font-weight: 600;
+      margin-bottom: 0.2em;
+      display: block;
+      color: var(--text);
+    }
+    .crud-form input, .crud-form textarea, .crud-form select {
+      width: 100%;
+      padding: 0.7em 1em;
+      margin-bottom: 1.2em;
+      border: 1.5px solid var(--primary-light);
+      border-radius: 0.5em;
+      font-size: 1rem;
+      background: var(--background);
+      transition: border 0.2s;
+      resize: none;
+    }
+    .crud-form input:focus, .crud-form textarea:focus, .crud-form select:focus {
+      border: 1.5px solid var(--primary);
+      outline: none;
+    }
+    .crud-form .nav-btn {
+      width: 100%;
+      margin-top: 0.5em;
+    }
+    .crud-success {
+      color: #2ecc40;
+      text-align: center;
+      margin-bottom: 1em;
+      font-weight: 600;
+      display: none;
+    }
+    .crud-error {
+      color: #d32f2f;
+      text-align: center;
+      margin-bottom: 1em;
+      font-weight: 600;
+      display: none;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-title">
+      <span class="icon">📋</span>
+      <span class="main-title">Registro <span class="highlight">Amonestaciones</span></span>
+    </div>
+    <div class="navbar-actions">
+      <a href="index.html" class="nav-btn nav-btn-outline">Volver</a>
+    </div>
+  </nav>
+  <div class="crud-container">
+    <div class="crud-title">Crear Amonestación</div>
+    <form class="crud-form" id="amonestacionForm">
+      <label for="nombre-estudiante">Nombre del Estudiante</label>
+      <input type="text" id="nombre-estudiante" name="nombre" required>
+      <label for="grado">Grado</label>
+      <input type="text" id="grado" name="grado" required>
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" name="fecha" required>
+      <label for="infraccion">Infracción</label>
+      <input type="text" id="infraccion" name="infraccion" required>
+      <label for="comentarios">Comentarios</label>
+      <textarea id="comentarios" name="comentarios" rows="3"></textarea>
+      <label for="profesor">Nombre del Profesor</label>
+      <input type="text" id="profesor" name="profesor" required>
+      <button type="submit" class="nav-btn">Guardar</button>
+      <div class="crud-success" id="successMsg">¡Amonestación guardada!</div>
+      <div class="crud-error" id="errorMsg">Error al guardar. Intenta de nuevo.</div>
+    </form>
+  </div>
+  <script>
+    const form = document.getElementById('amonestacionForm');
+    const successMsg = document.getElementById('successMsg');
+    const errorMsg = document.getElementById('errorMsg');
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+      const data = {
+        nombre: form.nombre.value.trim(),
+        grado: form.grado.value.trim(),
+        fecha: form.fecha.value,
+        infraccion: form.infraccion.value.trim(),
+        comentarios: form.comentarios.value.trim(),
+        profesor: form.profesor.value.trim(),
+        timestamp: new Date()
+      };
+      try {
+        await db.collection('amonestacion').add(data);
+        form.reset();
+        successMsg.style.display = 'block';
+      } catch (err) {
+        errorMsg.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html> 

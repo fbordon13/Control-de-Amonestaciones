@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenido - Registro Amonestaciones</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .welcome-container {
+      max-width: 500px;
+      margin: 5rem auto 0 auto;
+      background: var(--white);
+      border-radius: 1.2em;
+      box-shadow: 0 4px 24px var(--shadow);
+      padding: 2.5rem 2rem 2.5rem 2rem;
+      text-align: center;
+      animation: mainFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.3s both;
+    }
+    .welcome-icons {
+      font-size: 2.5rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .welcome-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.7rem;
+    }
+    .welcome-text {
+      color: var(--text);
+      font-size: 1.1rem;
+      margin-bottom: 2.2rem;
+    }
+    .welcome-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+    }
+    @media (max-width: 600px) {
+      .welcome-container { padding: 1.2rem 0.5rem; }
+      .welcome-title { font-size: 1.3rem; }
+      .welcome-icons { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-title">
+      <span class="icon">📋</span>
+      <span class="main-title">Registro <span class="highlight">Amonestaciones</span></span>
+    </div>
+    <div class="navbar-actions">
+      <a href="login.html" class="nav-btn">Login</a>
+      <a href="register.html" class="nav-btn nav-btn-outline">Register</a>
+    </div>
+  </nav>
+  <div class="welcome-container">
+    <div class="welcome-icons">
+      <span title="Amonestación">⚠️</span>
+      <span title="Expediente">📁</span>
+      <span title="Docente">👩‍🏫</span>
+    </div>
+    <div class="welcome-title">Bienvenido al Sistema de Registro de Amonestaciones</div>
+    <div class="welcome-text">
+      Gestiona, consulta y administra amonestaciones escolares de manera sencilla y profesional.<br>
+      Accede con tu cuenta educativa para comenzar.
+    </div>
+    <div class="welcome-actions">
+      <a href="login.html" class="nav-btn">Iniciar Sesión</a>
+      <a href="register.html" class="nav-btn nav-btn-outline">Registrarse</a>
+    </div>
+  </div>
+</body>
+</html> 

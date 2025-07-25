@@ -3,83 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Amonestaciones</title>
+  <title>Registro Amonestaciones</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="app">
-    <!-- Contenedor de Login -->
-    <section id="login-section">
-      <h2>Iniciar Sesión</h2>
-      <form id="login-form">
-        <input type="email" id="login-email" placeholder="Correo electrónico" required>
-        <input type="password" id="login-password" placeholder="Contraseña" required>
-        <button type="submit">Entrar</button>
-        <div id="login-error" class="error"></div>
-      </form>
-      <p>¿No tienes cuenta? <button id="show-register-btn" type="button">Crear cuenta</button></p>
-      <form id="register-form" style="display:none;">
-        <h3>Crear cuenta</h3>
-        <input type="email" id="register-email" placeholder="Correo educativo" required>
-        <input type="password" id="register-password" placeholder="Contraseña" required>
-        <input type="password" id="register-password2" placeholder="Repetir contraseña" required>
-        <button type="submit">Registrarse</button>
-        <div id="register-error" class="error"></div>
-      </form>
-      <p id="show-login-link" style="display:none;">¿Ya tienes cuenta? <button type="button">Iniciar sesión</button></p>
-    </section>
-
-    <!-- Contenedor principal (oculto hasta login) -->
-    <section id="main-section" style="display:none;">
-      <header>
-        <h1>Registro de Amonestaciones</h1>
-        <button id="logout-btn">Cerrar sesión</button>
-      </header>
-      <div id="user-role"></div>
-      <!-- Formulario de registro -->
-      <form id="amonestacion-form">
-        <h2>Registrar Amonestación</h2>
-        <input type="text" id="nombre-estudiante" placeholder="Nombre completo del estudiante" required>
-        <input type="text" id="grado-grupo" placeholder="Grado / Grupo" required>
-        <input type="date" id="fecha-amonestacion" required>
-        <textarea id="motivo" placeholder="Motivo de la amonestación" required></textarea>
-        <input type="text" id="docente" placeholder="Docente que reporta" required>
-        <button type="submit">Registrar</button>
-        <div id="form-error" class="error"></div>
-      </form>
-      <!-- Panel de historial -->
-      <section id="historial-section">
-        <h2>Historial de Amonestaciones</h2>
-        <div id="busqueda-panel">
-          <input type="text" id="buscar-nombre" placeholder="Buscar por nombre">
-          <input type="text" id="buscar-grado" placeholder="Buscar por grado">
-          <input type="date" id="buscar-fecha" placeholder="Buscar por fecha">
-        </div>
-        <table id="historial-table">
-          <thead>
-            <tr>
-              <th>Estudiante</th>
-              <th>Grado/Grupo</th>
-              <th>Fecha</th>
-              <th>Motivo</th>
-              <th>Docente</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Registros dinámicos -->
-          </tbody>
-        </table>
-      </section>
-    </section>
+  <nav class="navbar">
+    <div class="navbar-title">
+      <span class="icon">📋</span>
+      <span class="main-title">Registro <span class="highlight">Amonestaciones</span></span>
+    </div>
+    <div class="navbar-actions">
+      <div class="user-icon" id="userIcon" title="Ver datos de usuario">👤</div>
+      <a href="welcome.html" class="nav-btn nav-btn-outline">Salir</a>
+    </div>
+  </nav>
+  <div class="user-popup" id="userPopup">
+    <button class="close-btn" id="closePopup">×</button>
+    <div><strong>Nombre:</strong> <span id="popupName">Usuario</span></div>
+    <div><strong>Correo:</strong> <span id="popupEmail">usuario@correo.com</span></div>
+    <button id="logoutBtn" class="nav-btn nav-btn-outline" style="width:100%;margin-top:1em;">Cerrar sesión</button>
   </div>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="app.js"></script>
+  <main>
+    <div class="main-actions">
+      <a href="crear-amonestacion.html" class="main-btn" id="btn-crear">
+        <span class="main-btn-icon">➕</span>
+        <span>Crear Amonestación</span>
+      </a>
+      <a href="#" class="main-btn" id="btn-editar">
+        <span class="main-btn-icon">✏️</span>
+        <span>Editar Amonestación</span>
+      </a>
+      <a href="expediente.html" class="main-btn" id="btn-expediente">
+        <span class="main-btn-icon">📁</span>
+        <span>Expediente Estudiante</span>
+      </a>
+    </div>
+  </main>
+  <script>
+    // Popup usuario
+    const userIcon = document.getElementById('userIcon');
+    const userPopup = document.getElementById('userPopup');
+    const closePopup = document.getElementById('closePopup');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    userIcon.addEventListener('click', () => {
+      userPopup.classList.toggle('active');
+    });
+    closePopup.addEventListener('click', () => {
+      userPopup.classList.remove('active');
+    });
+    document.addEventListener('click', (e) => {
+      if (!userPopup.contains(e.target) && !userIcon.contains(e.target)) {
+        userPopup.classList.remove('active');
+      }
+    });
+    logoutBtn.addEventListener('click', () => {
+      window.location.href = 'welcome.html';
+    });
+    // Botones principales
+    // El de crear ya tiene href directo
+    // Los otros pueden tener lógica JS si lo deseas
+  </script>
 </body>
 </html> 
