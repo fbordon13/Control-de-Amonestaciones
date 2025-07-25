@@ -114,7 +114,7 @@
         timestamp: new Date()
       };
       try {
-        await db.collection('amonestacion').add(data);
+        await db.collection('amonestación').add(data);
         form.reset();
         successMsg.style.display = 'block';
       } catch (err) {
