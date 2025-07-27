@@ -103,12 +103,13 @@
 <body>
   <nav class="navbar">
     <div class="navbar-title">
+      <img src="logo-inst.png" alt="Instituto Rubiano" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
       <span class="icon">📋</span>
-      <span class="main-title">Registro <span class="highlight">Amonestaciones</span></span>
+      <span class="main-title">Sistema de <span class="highlight">Amonestaciones</span></span>
     </div>
     <div class="navbar-actions">
-      <a href="login.html" class="nav-btn">Login</a>
-      <a href="register.html" class="nav-btn nav-btn-outline">Register</a>
+      <a href="login.html" class="nav-btn">Iniciar Sesión</a>
+      <a href="register.html" class="nav-btn nav-btn-outline">Registrarse</a>
     </div>
   </nav>
   <div class="register-container">
@@ -162,5 +163,104 @@
       window.location.href = 'index.html';
     });
   </script>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Instituto Rubiano</h3>
+        <p>Institución educativa comprometida con la excelencia académica y la formación integral de nuestros estudiantes.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Navegación</h3>
+        <ul class="footer-links">
+          <li><a href="welcome.html">Inicio</a></li>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+          <li><a href="register.html">Registrarse</a></li>
+          <li><a href="index.html">Panel Principal</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Funcionalidades</h3>
+        <ul class="footer-links">
+          <li><a href="crear-amonestacion.html">Registro Digital</a></li>
+          <li><a href="expediente.html">Consulta de Expedientes</a></li>
+          <li><a href="editar-amonestacion.html">Edición de Registros</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Soporte</h3>
+        <p>Para asistencia técnica o consultas sobre el sistema, contacta al administrador del sistema.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2024 Sistema de Amonestaciones. Todos los derechos reservados.
+      </div>
+      <div class="developer">
+        Desarrollado por <strong>Ghostgg_11</strong> para <strong>Instituto Rubiano</strong>
+      </div>
+    </div>
+  </footer>
+  <style>
+    .footer {
+      background: var(--primary);
+      color: white;
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .footer-section h3 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .footer-section p {
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+    .footer-links {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+    .footer-links a:hover {
+      opacity: 1;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .copyright {
+      opacity: 0.8;
+    }
+    .developer {
+      font-weight: 600;
+    }
+    @media (max-width: 768px) {
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
 </body>
 </html> 

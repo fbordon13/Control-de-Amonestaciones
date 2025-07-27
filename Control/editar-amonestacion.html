@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crear Amonestación</title>
+  <title>Editar Amonestación</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     .crud-container {
@@ -61,6 +61,11 @@
       font-weight: 600;
       display: none;
     }
+    .loading {
+      text-align: center;
+      color: var(--text);
+      font-style: italic;
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -74,12 +79,13 @@
       <span class="main-title">Sistema de <span class="highlight">Amonestaciones</span></span>
     </div>
     <div class="navbar-actions">
-      <a href="index.html" class="nav-btn nav-btn-outline">Volver</a>
+      <a href="expediente.html" class="nav-btn nav-btn-outline">Volver</a>
     </div>
   </nav>
   <div class="crud-container">
-    <div class="crud-title">Crear Amonestación</div>
-    <form class="crud-form" id="amonestacionForm">
+    <div class="crud-title">Editar Amonestación</div>
+    <div class="loading" id="loadingMsg">Cargando amonestación...</div>
+    <form class="crud-form" id="amonestacionForm" style="display: none;">
       <label for="nombre-estudiante">Nombre del Estudiante</label>
       <input type="text" id="nombre-estudiante" name="nombre" required>
       <label for="grado">Grado</label>
@@ -92,15 +98,63 @@
       <textarea id="comentarios" name="comentarios" rows="3"></textarea>
       <label for="profesor">Nombre del Profesor</label>
       <input type="text" id="profesor" name="profesor" required>
-      <button type="submit" class="nav-btn">Guardar</button>
-      <div class="crud-success" id="successMsg">¡Amonestación guardada!</div>
-      <div class="crud-error" id="errorMsg">Error al guardar. Intenta de nuevo.</div>
+      <button type="submit" class="nav-btn">Actualizar</button>
+      <div class="crud-success" id="successMsg">¡Amonestación actualizada!</div>
+      <div class="crud-error" id="errorMsg">Error al actualizar. Intenta de nuevo.</div>
     </form>
   </div>
   <script>
     const form = document.getElementById('amonestacionForm');
+    const loadingMsg = document.getElementById('loadingMsg');
     const successMsg = document.getElementById('successMsg');
     const errorMsg = document.getElementById('errorMsg');
+    let amonestacionId = null;
+
+    // Obtener ID de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    amonestacionId = urlParams.get('id');
+
+    if (!amonestacionId) {
+      loadingMsg.innerHTML = 'Error: No se especificó una amonestación para editar';
+    } else {
+      // Esperar a que todo esté listo antes de cargar la amonestación
+      window.addEventListener('load', function() {
+        if (typeof db === 'undefined') {
+          // Si db no está listo, espera y reintenta
+          setTimeout(() => location.reload(), 1000);
+          return;
+        }
+        cargarAmonestacion();
+      });
+    }
+
+    // Cargar datos de la amonestación
+    async function cargarAmonestacion() {
+      try {
+        if (typeof db === 'undefined') {
+          loadingMsg.innerHTML = 'Error: Firebase no está inicializado';
+          return;
+        }
+        const doc = await db.collection('amonestacion').doc(amonestacionId).get();
+        if (!doc.exists) {
+          loadingMsg.innerHTML = 'Error: Amonestación no encontrada';
+          return;
+        }
+        const data = doc.data();
+        form.nombre.value = data.nombre || '';
+        form.grado.value = data.grado || '';
+        form.fecha.value = data.fecha || '';
+        form.infraccion.value = data.infraccion || '';
+        form.comentarios.value = data.comentarios || '';
+        form.profesor.value = data.profesor || '';
+        loadingMsg.style.display = 'none';
+        form.style.display = 'block';
+      } catch (err) {
+        loadingMsg.innerHTML = 'Error al cargar la amonestación: ' + err.message;
+      }
+    }
+
+    // Manejar envío del formulario
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       successMsg.style.display = 'none';
@@ -112,12 +166,15 @@
         infraccion: form.infraccion.value.trim(),
         comentarios: form.comentarios.value.trim(),
         profesor: form.profesor.value.trim(),
-        timestamp: new Date()
+        editado: true,
+        fechaEdicion: new Date()
       };
       try {
-        await db.collection('amonestacion').add(data);
-        form.reset();
+        await db.collection('amonestacion').doc(amonestacionId).update(data);
         successMsg.style.display = 'block';
+        setTimeout(() => {
+          window.location.href = 'expediente.html';
+        }, 1500);
       } catch (err) {
         errorMsg.style.display = 'block';
       }

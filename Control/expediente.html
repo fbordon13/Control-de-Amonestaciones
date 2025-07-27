@@ -114,6 +114,34 @@
       color: var(--text);
       opacity: 0.8;
     }
+    .amonestacion-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    .edit-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.4em;
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .edit-btn:hover {
+      background: var(--accent);
+      transform: scale(1.05);
+    }
+    .editado-tag {
+      background: #ff9800;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.3rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
     .loading {
       text-align: center;
       color: var(--text);
@@ -133,8 +161,9 @@
 <body>
   <nav class="navbar">
     <div class="navbar-title">
+      <img src="logo-inst.png" alt="Instituto Rubiano" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
       <span class="icon">📋</span>
-      <span class="main-title">Registro <span class="highlight">Amonestaciones</span></span>
+      <span class="main-title">Sistema de <span class="highlight">Amonestaciones</span></span>
     </div>
     <div class="navbar-actions">
       <a href="index.html" class="nav-btn nav-btn-outline">Volver</a>
@@ -142,24 +171,25 @@
   </nav>
   <div class="expediente-container">
     <div class="expediente-title">Expediente de Estudiantes</div>
+    <input type="text" id="buscadorEstudiante" placeholder="Buscar estudiante por nombre..." style="width:100%;padding:0.7em 1em;margin-bottom:1.5em;border:1.5px solid var(--primary-light);border-radius:0.5em;font-size:1rem;">
     <div class="estudiantes-lista" id="estudiantesLista">
       <div class="loading">Cargando estudiantes...</div>
     </div>
   </div>
   <script>
     const estudiantesLista = document.getElementById('estudiantesLista');
+    const buscadorEstudiante = document.getElementById('buscadorEstudiante');
     let estudiantesData = [];
     let amonestacionesData = [];
+    let estudiantesFiltrados = [];
 
     // Cargar datos de amonestaciones
     async function cargarDatos() {
       try {
         const snapshot = await db.collection('amonestacion').get();
         amonestacionesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
         // Crear lista de estudiantes únicos
         const estudiantesUnicos = new Map();
-        
         amonestacionesData.forEach(amonestacion => {
           const key = `${amonestacion.nombre}-${amonestacion.grado}`;
           if (!estudiantesUnicos.has(key)) {
@@ -171,8 +201,8 @@
           }
           estudiantesUnicos.get(key).amonestaciones.push(amonestacion);
         });
-        
         estudiantesData = Array.from(estudiantesUnicos.values());
+        estudiantesFiltrados = estudiantesData;
         mostrarEstudiantes();
       } catch (error) {
         estudiantesLista.innerHTML = '<div class="no-data">Error al cargar datos</div>';
@@ -181,13 +211,12 @@
 
     // Mostrar lista de estudiantes
     function mostrarEstudiantes() {
-      if (estudiantesData.length === 0) {
+      if (estudiantesFiltrados.length === 0) {
         estudiantesLista.innerHTML = '<div class="no-data">No hay estudiantes registrados</div>';
         return;
       }
-
       estudiantesLista.innerHTML = '';
-      estudiantesData.forEach((estudiante, index) => {
+      estudiantesFiltrados.forEach((estudiante, index) => {
         const estudianteDiv = document.createElement('div');
         estudianteDiv.className = 'estudiante-item';
         estudianteDiv.innerHTML = `
@@ -197,12 +226,25 @@
           </div>
           <div class="estudiante-count">${estudiante.amonestaciones.length} amonestación(es)</div>
         `;
-        
         // Agregar evento click
-        estudianteDiv.addEventListener('click', () => mostrarDetalles(index));
+        estudianteDiv.addEventListener('click', () => mostrarDetalles(estudiantesData.indexOf(estudiante)));
         estudiantesLista.appendChild(estudianteDiv);
       });
     }
+
+    // Filtrar estudiantes por nombre
+    buscadorEstudiante.addEventListener('input', function() {
+      const texto = buscadorEstudiante.value.trim().toLowerCase();
+      if (texto === '') {
+        estudiantesFiltrados = estudiantesData;
+      } else {
+        estudiantesFiltrados = estudiantesData.filter(est => est.nombre.toLowerCase().includes(texto));
+      }
+      mostrarEstudiantes();
+      // Cerrar detalles abiertos al filtrar
+      const detallesAnteriores = document.querySelector('.detalles-container');
+      if (detallesAnteriores) detallesAnteriores.remove();
+    });
 
     // Mostrar detalles de un estudiante
     function mostrarDetalles(estudianteIndex) {
@@ -232,6 +274,10 @@
           <div class="amonestacion-infraccion">${amonestacion.infraccion}</div>
           ${amonestacion.comentarios ? `<div class="amonestacion-comentarios">${amonestacion.comentarios}</div>` : ''}
           <div class="amonestacion-profesor">Profesor: ${amonestacion.profesor}</div>
+          <div class="amonestacion-actions">
+            <button class="edit-btn" onclick="editarAmonestacion('${amonestacion.id}')" title="Editar amonestación">✏️</button>
+            ${amonestacion.editado ? '<span class="editado-tag">EDITADO</span>' : ''}
+          </div>
         `;
         detallesContainer.appendChild(amonestacionDiv);
       });
@@ -241,8 +287,112 @@
       estudianteItem.parentNode.insertBefore(detallesContainer, estudianteItem.nextSibling);
     }
 
+    // Función para editar amonestación
+    function editarAmonestacion(amonestacionId) {
+      window.location.href = `editar-amonestacion.html?id=${amonestacionId}`;
+    }
+
     // Cargar datos al cargar la página
     cargarDatos();
   </script>
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Instituto Rubiano</h3>
+        <p>Institución educativa comprometida con la excelencia académica y la formación integral de nuestros estudiantes.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Navegación</h3>
+        <ul class="footer-links">
+          <li><a href="index.html">Panel Principal</a></li>
+          <li><a href="crear-amonestacion.html">Crear Amonestación</a></li>
+          <li><a href="expediente.html">Expedientes</a></li>
+          <li><a href="welcome.html">Cerrar Sesión</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Funcionalidades</h3>
+        <ul class="footer-links">
+          <li><a href="crear-amonestacion.html">Registro Digital</a></li>
+          <li><a href="expediente.html">Consulta de Expedientes</a></li>
+          <li><a href="editar-amonestacion.html">Edición de Registros</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Soporte</h3>
+        <p>Para asistencia técnica o consultas sobre el sistema, contacta al administrador del sistema.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2024 Sistema de Amonestaciones. Todos los derechos reservados.
+      </div>
+      <div class="developer">
+        Desarrollado por <strong>Ghostgg_11</strong> para <strong>Instituto Rubiano</strong>
+      </div>
+    </div>
+  </footer>
+  <style>
+    .footer {
+      background: var(--primary);
+      color: white;
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .footer-section h3 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .footer-section p {
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+    .footer-links {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+    .footer-links a:hover {
+      opacity: 1;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .copyright {
+      opacity: 0.8;
+    }
+    .developer {
+      font-weight: 600;
+    }
+    @media (max-width: 768px) {
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
 </body>
 </html> 

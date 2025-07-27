@@ -3,46 +3,187 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bienvenido - Registro Amonestaciones</title>
+  <title>Bienvenido - Sistema de Amonestaciones</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    .welcome-container {
-      max-width: 500px;
-      margin: 5rem auto 0 auto;
-      background: var(--white);
-      border-radius: 1.2em;
-      box-shadow: 0 4px 24px var(--shadow);
-      padding: 2.5rem 2rem 2.5rem 2rem;
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      padding: 4rem 2rem;
       text-align: center;
-      animation: mainFadeIn 1.2s cubic-bezier(.77,0,.18,1) 0.3s both;
+      position: relative;
+      overflow: hidden;
     }
-    .welcome-icons {
-      font-size: 2.5rem;
-      margin-bottom: 1.2rem;
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      opacity: 0.3;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .instituto-logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      display: block;
+      border: 4px solid rgba(255,255,255,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .hero-subtitle {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+    .features-section {
+      padding: 4rem 2rem;
+      background: var(--white);
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: var(--background);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: transform 0.3s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .feature-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .feature-text {
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .cta-section {
+      background: var(--background);
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .cta-buttons {
       display: flex;
       justify-content: center;
       gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
     }
-    .welcome-title {
-      font-size: 2.1rem;
-      font-weight: 800;
+    .cta-btn {
+      padding: 1rem 2rem;
+      border-radius: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cta-btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .cta-btn-primary:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+    .cta-btn-secondary {
+      background: transparent;
       color: var(--primary);
-      margin-bottom: 0.7rem;
+      border: 2px solid var(--primary);
     }
-    .welcome-text {
-      color: var(--text);
-      font-size: 1.1rem;
-      margin-bottom: 2.2rem;
+    .cta-btn-secondary:hover {
+      background: var(--primary);
+      color: white;
     }
-    .welcome-actions {
+    .footer {
+      background: var(--primary);
+      color: white;
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .footer-section h3 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .footer-section p {
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+    .footer-links {
+      list-style: none;
+      padding: 0;
+    }
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.3s;
+    }
+    .footer-links a:hover {
+      opacity: 1;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 2rem;
       display: flex;
-      justify-content: center;
-      gap: 1.2rem;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
-    @media (max-width: 600px) {
-      .welcome-container { padding: 1.2rem 0.5rem; }
-      .welcome-title { font-size: 1.3rem; }
-      .welcome-icons { font-size: 1.5rem; }
+    .copyright {
+      opacity: 0.8;
+    }
+    .developer {
+      font-weight: 600;
+    }
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2rem; }
+      .hero-subtitle { font-size: 1.1rem; }
+      .instituto-logo { width: 80px; height: 80px; }
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .footer-bottom { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
@@ -50,28 +191,108 @@
   <nav class="navbar">
     <div class="navbar-title">
       <span class="icon">📋</span>
-      <span class="main-title">Registro <span class="highlight">Amonestaciones</span></span>
+      <span class="main-title">Sistema de <span class="highlight">Amonestaciones</span></span>
     </div>
     <div class="navbar-actions">
-      <a href="login.html" class="nav-btn">Login</a>
-      <a href="register.html" class="nav-btn nav-btn-outline">Register</a>
-    </div>
-  </nav>
-  <div class="welcome-container">
-    <div class="welcome-icons">
-      <span title="Amonestación">⚠️</span>
-      <span title="Expediente">📁</span>
-      <span title="Docente">👩‍🏫</span>
-    </div>
-    <div class="welcome-title">Bienvenido al Sistema de Registro de Amonestaciones</div>
-    <div class="welcome-text">
-      Gestiona, consulta y administra amonestaciones escolares de manera sencilla y profesional.<br>
-      Accede con tu cuenta educativa para comenzar.
-    </div>
-    <div class="welcome-actions">
       <a href="login.html" class="nav-btn">Iniciar Sesión</a>
       <a href="register.html" class="nav-btn nav-btn-outline">Registrarse</a>
     </div>
-  </div>
+  </nav>
+
+  <section class="hero-section">
+    <div class="hero-content">
+      <img src="logo-inst.png" alt="Instituto Rubiano" class="instituto-logo">
+      <h1 class="hero-title">Sistema de Gestión de Amonestaciones</h1>
+      <p class="hero-subtitle">Plataforma digital para la administración eficiente de expedientes disciplinarios escolares</p>
+    </div>
+  </section>
+
+  <section class="features-section">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3 class="feature-title">Registro Digital</h3>
+        <p class="feature-text">Crea y gestiona amonestaciones de manera digital, eliminando el papeleo tradicional y mejorando la eficiencia administrativa.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📁</div>
+        <h3 class="feature-title">Expedientes Organizados</h3>
+        <p class="feature-text">Mantén un historial completo y organizado de cada estudiante, facilitando el seguimiento y la consulta de información.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">Seguridad Garantizada</h3>
+        <p class="feature-text">Sistema de autenticación seguro que protege la información confidencial de los estudiantes y la institución.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">Reportes en Tiempo Real</h3>
+        <p class="feature-text">Accede a información actualizada instantáneamente, permitiendo una gestión más efectiva y toma de decisiones informada.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3 class="feature-title">Acceso Multi-usuario</h3>
+        <p class="feature-text">Permite que múltiples docentes y administradores accedan al sistema de manera segura y coordinada.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3 class="feature-title">Interfaz Responsiva</h3>
+        <p class="feature-text">Diseño adaptativo que funciona perfectamente en computadoras, tablets y dispositivos móviles.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">¿Listo para comenzar?</h2>
+    <p style="font-size: 1.2rem; color: var(--text); margin-bottom: 2rem;">Únete a la transformación digital de la gestión escolar</p>
+    <div class="cta-buttons">
+      <a href="login.html" class="cta-btn cta-btn-primary">
+        <span>🚀</span>
+        Iniciar Sesión
+      </a>
+      <a href="register.html" class="cta-btn cta-btn-secondary">
+        <span>📋</span>
+        Crear Cuenta
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Instituto Rubiano</h3>
+        <p>Institución educativa comprometida con la excelencia académica y la formación integral de nuestros estudiantes.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Navegación</h3>
+        <ul class="footer-links">
+          <li><a href="welcome.html">Inicio</a></li>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+          <li><a href="register.html">Registrarse</a></li>
+          <li><a href="index.html">Panel Principal</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Funcionalidades</h3>
+        <ul class="footer-links">
+          <li><a href="crear-amonestacion.html">Crear Amonestación</a></li>
+          <li><a href="expediente.html">Expedientes</a></li>
+          <li><a href="editar-amonestacion.html">Editar Registros</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Soporte</h3>
+        <p>Para asistencia técnica o consultas sobre el sistema, contacta al administrador del sistema.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2024 Sistema de Amonestaciones. Todos los derechos reservados.
+      </div>
+      <div class="developer">
+        Desarrollado por <strong>Ghostgg_11</strong> para <strong>Instituto Rubiano</strong>
+      </div>
+    </div>
+  </footer>
 </body>
 </html> 
