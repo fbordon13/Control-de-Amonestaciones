@@ -1,12 +1,12 @@
-/* Paleta de colores suaves y profesionales */
+/* Paleta de colores azul y amarillo */
 :root {
-  --primary: #4f8cff;
-  --primary-light: #eaf2ff;
-  --accent: #ffb347;
-  --background: #f7f9fb;
-  --text: #222b45;
+  --primary: #1a237e; /* Azul oscuro */
+  --primary-light: #e3f2fd; /* Azul claro */
+  --accent: #ffd600; /* Amarillo vibrante */
+  --background: #f5f7fa; /* Fondo claro */
+  --text: #212121; /* Gris oscuro para texto */
   --white: #fff;
-  --shadow: rgba(79, 140, 255, 0.08);
+  --shadow: rgba(26, 35, 126, 0.10); /* Sombra azulada */
 }
 
 body {
